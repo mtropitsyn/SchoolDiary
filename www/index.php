@@ -10,7 +10,7 @@
     <div class="container">
         <h1 class="system-tytle">Школьный анализатор успеваемости</h1>
       <div class="login-form__container">
-        <form action="" method="get" class="login-form">
+        <form action="login.php" method="get" class="login-form">
           <div class="login-form__input">
             <input type="text" name="login" id="login" placeholder="Логин" required />
           </div>

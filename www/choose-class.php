@@ -1,3 +1,7 @@
+<?php
+require_once 'auth_check.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -163,4 +167,9 @@
                 <button class="choose-class-button">11D</button>
             </li>
         </ul>
+        <div class="exit-container">
+            <a href="exit.php">Выйти</a>
+        </div>
     </div>
+    
+<body>
