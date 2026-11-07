@@ -18,6 +18,7 @@ try {
         echo "База $database создана.", PHP_EOL;
     } else echo "База $database уже существует, данные не изменены.", PHP_EOL;
 } catch (Throwable $e) {
+    if (in_array('--verbose', $argv, true)) fwrite(STDERR, $e->getMessage() . PHP_EOL);
     fwrite(STDERR, $e instanceof InvalidArgumentException ? $e->getMessage() . PHP_EOL : 'Не удалось создать базу. Проверьте соединение и право CREATE DATABASE.' . PHP_EOL);
     exit(1);
 }

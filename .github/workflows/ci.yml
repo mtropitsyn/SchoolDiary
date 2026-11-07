@@ -53,8 +53,10 @@ jobs:
       - name: Create isolated test database
         shell: bash
         run: |
+          php -r 'echo "PDO drivers: ", implode(", ", PDO::getAvailableDrivers()), PHP_EOL;'
+          odbcinst -q -d
           for attempt in {1..30}; do
-            if php scripts/create-database.php; then exit 0; fi
+            if php scripts/create-database.php --verbose; then exit 0; fi
             sleep 2
           done
           exit 1
