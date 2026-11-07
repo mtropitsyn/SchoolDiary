@@ -1,0 +1,16 @@
+/.env
+/.env.*
+!/.env.example
+/var/
+**/.vs/
+**/.idea/
+*.user
+*.suo
+*.log
+*.sqlite
+*.sqlite-*
+*.db
+*.bak
+__pycache__/
+.DS_Store
+Thumbs.db

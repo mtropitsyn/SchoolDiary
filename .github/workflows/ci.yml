@@ -1,0 +1,62 @@
+name: Tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  sqlite:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo_sqlite, mbstring
+          coverage: none
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: PHP syntax
+        run: find app public scripts tests -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: SQLite checks
+        run: php tests/run.php
+      - name: HTTP checks
+        run: python tests/http_test.py
+  sqlserver:
+    runs-on: ubuntu-latest
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: 'Y'
+          MSSQL_PID: Developer
+          MSSQL_SA_PASSWORD: 'Local-CI-Password_2026!'
+        ports:
+          - 1433:1433
+    env:
+      DB_DRIVER: sqlsrv
+      DB_SERVER: localhost,1433
+      DB_DATABASE: SchoolDiaryTest_ci
+      DB_USER: sa
+      DB_PASSWORD: 'Local-CI-Password_2026!'
+      DB_ENCRYPT: '1'
+      DB_TRUST_CERTIFICATE: '1'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo_sqlsrv, mbstring
+          coverage: none
+      - name: Create isolated test database
+        shell: bash
+        run: |
+          for attempt in {1..30}; do
+            if php scripts/create-database.php; then exit 0; fi
+            sleep 2
+          done
+          exit 1
+      - name: SQL Server checks
+        run: php tests/run.php
